@@ -1,26 +1,39 @@
+'use client';
+
+import Link from 'next/link';
+import { useAuth } from './auth/AuthContext';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+
 export default function Home() {
+  const { user } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user) {
+      router.push('/search');
+    }
+  }, [user, router]);
+
+  if (user) {
+    return null;
+  }
+
   return (
-    <main
-      className="bg-cover p-10 flex items-center justify-center min-h-screen"
-      style={{ backgroundImage: "url('/home-page-background.jpg')" }}
-    >
-      <div className="max-w-7xl mx-auto bg-white bg-opacity-95 p-10 rounded-lg shadow-lg -mt-16">
-        <h1 className="text-4xl font-bold text-black mb-8 text-center">
-          Welcome to BookBoxd
-        </h1>
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-xl font-semibold text-secondary">
-            Welcome to BookBoxd! 
-            Consider this your digital bookshelf, recording books you've read and your thoughts on them.
-            Click the button below to log in and get started!
-          </h2>
-        </div>
-        <div className="mt-6 flex justify-center">
-          <button className="px-8 py-3 bg-accent hover:bg-accent/90 text-white font-semibold rounded-lg transition-colors shadow-lg">
-            Get Started!
-          </button>
-        </div>
+    <div className="text-center max-w-md mx-auto px-4">
+      <h2 className="text-3xl font-extrabold text-gray-900 mb-8 mt-6 text-center">
+        Welcome to BookBoxd
+      </h2>
+      <h3 className="max-w-md text-xl  mt-2 text-center text-gray-600">
+        Welcome to BookBoxd! 
+        Consider this your digital bookshelf, recording books you've read and your thoughts on them.
+        Click the button below to log in and get started!
+      </h3>
+      <div className="mt-6 flex justify-center">
+        <Link href="/auth/login" className="px-8 py-3 bg-accent hover:bg-accent/90 text-white font-semibold rounded-lg transition-colors shadow-lg">
+          Get Started!
+        </Link>
       </div>
-    </main>
+    </div>
   );
 }

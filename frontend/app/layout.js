@@ -1,5 +1,7 @@
 import './globals.css';
 import Navbar from './components/Navbar';
+import BackgroundLayout from './components/BackgroundLayout';
+import { AuthProvider } from './auth/AuthContext';
 
 export const metadata = {
   title: 'BookBoxd - Track Your Reading Journey',
@@ -10,8 +12,12 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className="h-full">
       <body className="h-full overflow-x-hidden">
-        <Navbar />
-        {children}
+        <AuthProvider>
+          <Navbar />
+          <BackgroundLayout>
+            {children}
+          </BackgroundLayout>
+        </AuthProvider>
       </body>
     </html>
   );
