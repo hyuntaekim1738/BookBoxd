@@ -9,7 +9,7 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { user, signInWithGoogle } = useAuth();
+  const { user, signInWithGoogle, signInWithEmail } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -21,6 +21,21 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    
+    try {
+      await signInWithEmail(email, password);
+      
+    } catch (error) {
+      let errorMessage = 'Failed to sign in. Please try again.';
+      if (error.code === 'auth/user-not-found') {
+        errorMessage = 'No account found with this email. Please sign up.';
+      } else if (error.code === 'auth/wrong-password') {
+        errorMessage = 'Incorrect password. Please try again.';
+      } else if (error.code === 'auth/invalid-email') {
+        errorMessage = 'Invalid email address.';
+      }
+      setError(errorMessage);
+    }
   };
 
   if (user) {
@@ -40,7 +55,10 @@ export default function Login() {
           <span className="block sm:inline">{error}</span>
         </div>
       )}
-      <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+      <form 
+        className="mt-8 space-y-6" 
+        onSubmit={handleSubmit}
+      >
         <div className="rounded-md shadow-sm -space-y-px">
           <div>
             <label htmlFor="email" className="sr-only">
@@ -53,7 +71,6 @@ export default function Login() {
               required
               className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-accent focus:border-accent focus:z-10 sm:text-sm"
               placeholder="Email address"
-              value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
@@ -68,7 +85,6 @@ export default function Login() {
               required
               className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-accent focus:border-accent focus:z-10 sm:text-sm"
               placeholder="Password"
-              value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>

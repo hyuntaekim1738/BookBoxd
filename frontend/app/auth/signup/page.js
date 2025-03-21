@@ -10,7 +10,7 @@ export default function SignUp() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
-  const { user, signInWithGoogle } = useAuth();
+  const { user, signInWithGoogle, signUpWithEmail } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -22,10 +22,24 @@ export default function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-
+    
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       return;
+    }
+
+    try {
+      await signUpWithEmail(email, password);
+    } catch (error) {
+      let errorMessage = 'Failed to create account. Please try again.';
+      if (error.code === 'auth/email-already-in-use') {
+        errorMessage = 'An account with this email already exists. Please sign in.';
+      } else if (error.code === 'auth/invalid-email') {
+        errorMessage = 'Invalid email address.';
+      } else if (error.code === 'auth/weak-password') {
+        errorMessage = 'Password should be at least 6 characters long.';
+      }
+      setError(errorMessage);
     }
   };
 
@@ -46,7 +60,10 @@ export default function SignUp() {
           <span className="block sm:inline">{error}</span>
         </div>
       )}
-      <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+      <form 
+        className="mt-8 space-y-6" 
+        onSubmit={handleSubmit}
+      >
         <div className="rounded-md shadow-sm -space-y-px">
           <div>
             <label htmlFor="email" className="sr-only">
@@ -59,7 +76,6 @@ export default function SignUp() {
               required
               className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-accent focus:border-accent focus:z-10 sm:text-sm"
               placeholder="Email address"
-              value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
@@ -74,7 +90,6 @@ export default function SignUp() {
               required
               className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-accent focus:border-accent focus:z-10 sm:text-sm"
               placeholder="Password"
-              value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
@@ -89,7 +104,6 @@ export default function SignUp() {
               required
               className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-accent focus:border-accent focus:z-10 sm:text-sm"
               placeholder="Confirm Password"
-              value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </div>
