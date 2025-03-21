@@ -1,16 +1,61 @@
 'use client';
 
 import { useState } from 'react';
+import SearchResultCard from '../components/SearchResultCard';
 
 export default function SearchPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [books, setBooks] = useState([]);
+  const [totalItems, setTotalItems] = useState(0);
+  const [error, setError] = useState(null);
+  const [sortBy, setSortBy] = useState('relevance');
 
   const handleSearch = async (e) => {
     e.preventDefault();
+    if (!searchQuery.trim()) return;
+
     setIsLoading(true);
-    // TODO: Implement search functionality
-    setIsLoading(false);
+    setError(null);
+
+    try {
+      const params = new URLSearchParams({
+        q: searchQuery,
+        maxResults: '20',
+      });
+
+      const response = await fetch(`/api/books/search?${params}`);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to fetch books');
+      }
+
+      // Sort results based on selected option
+      let sortedBooks = [...data.books];
+      switch (sortBy) {
+        case 'rating':
+          sortedBooks.sort((a, b) => (b.averageRating || 0) - (a.averageRating || 0));
+          break;
+        case 'date':
+          sortedBooks.sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
+          break;
+        case 'title':
+          sortedBooks.sort((a, b) => a.title.localeCompare(b.title));
+          break;
+        default:
+          // Keep original relevance order
+          break;
+      }
+
+      setBooks(sortedBooks);
+      setTotalItems(data.totalItems);
+    } catch (err) {
+      setError(err.message);
+      setBooks([]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -33,7 +78,7 @@ export default function SearchPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by title, author, or ISBN..."
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent text-gray-900"
             />
           </div>
           <button
@@ -48,17 +93,11 @@ export default function SearchPage() {
 
       {/* filters */}
       <div className="mb-6 flex gap-4">
-        <select className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent">
-          <option value="">All Genres</option>
-          <option value="fiction">Fiction</option>
-          <option value="non-fiction">Non-Fiction</option>
-          <option value="mystery">Mystery</option>
-          <option value="sci-fi">Science Fiction</option>
-          <option value="fantasy">Fantasy</option>
-        </select>
-
-        <select className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent">
-          <option value="">Sort By</option>
+        <select 
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          className="px-4 py-2 border border-gray-900 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent bg-white text-gray-900"
+        >
           <option value="relevance">Relevance</option>
           <option value="rating">Rating</option>
           <option value="date">Publication Date</option>
@@ -68,37 +107,26 @@ export default function SearchPage() {
 
       {/* Results Section */}
       <div className="space-y-6">
-        {/* Example Result Card - This will be mapped over actual results */}
-        <div className="flex gap-4 p-4 bg-white rounded-lg shadow hover:shadow-md transition-shadow">
-          <div className="flex-shrink-0">
-            <div className="w-24 h-36 bg-gray-200 rounded"></div>
+        {error && (
+          <div className="text-red-500 text-center py-4">
+            {error}
           </div>
-          <div className="flex-1">
-            <h3 className="text-xl font-semibold text-gray-900 mb-1">Book Title Example</h3>
-            <p className="text-gray-600 mb-2">Author Name</p>
-            <p className="text-sm text-gray-500 mb-4">
-              Published by Publisher Name (2023)
-            </p>
-            <p className="text-gray-700 line-clamp-2">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
-            <div className="mt-4 flex items-center gap-4">
-              <button className="px-4 py-1 text-sm border border-accent text-accent rounded hover:bg-accent hover:text-white transition-colors">
-                Add to List
-              </button>
-              <div className="flex items-center">
-                <span className="text-yellow-400">★★★★</span>
-                <span className="text-gray-400">★</span>
-                <span className="ml-1 text-sm text-gray-600">(4.0)</span>
-              </div>
-            </div>
-          </div>
-        </div>
+        )}
 
-        {/* map over actual results here */}
-        <div className="text-center text-gray-500 py-8">
-          Search for books to see results
-        </div>
+        {books.length > 0 ? (
+          <>
+            <div className="text-sm text-gray-600 mb-4">
+              Found {totalItems} results
+            </div>
+            {books.map((book) => (
+              <SearchResultCard key={book.id} book={book} />
+            ))}
+          </>
+        ) : (
+          <div className="text-center text-gray-500 py-8">
+            {isLoading ? 'Searching...' : 'Search for books to see results'}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -14,10 +14,10 @@ This is a **book tracking and recommendation web app**, similar to Goodreads or 
 ## **🛠 Intended Tech Stack**
 | Feature | Technology |
 |------------|--------------|
-| **Frontend** | React.js / Next.js, Tailwind CSS |
+| **Frontend** | Next.js, Tailwind CSS |
 | **Backend** | FastAPI / Flask |
 | **Database** | PostgreSQL (for structured data like users & books) |
-| **Auth** | Firebase Auth (or Google OAuth) |
+| **Auth** | Firebase Auth |
 | **Search** | Elasticsearch (for book search & recommendations) |
 | **Caching** | Redis |
 | **Recommendation System** | Collaborative Filtering + NLP (spaCy / Hugging Face) |
@@ -28,7 +28,7 @@ This is a **book tracking and recommendation web app**, similar to Goodreads or 
 ## **🔨 Development Plan**
 ### **1️⃣ Phase 1: Core Features (MVP)**
 📆 *Timeline:* 2-3 months
-- [ ] **User Authentication** (Google OAuth / Firebase Auth)
+- ✅ **User Authentication** (Google OAuth / Firebase Auth)
 - [ ] **Database setup (PostgreSQL)**
 - [ ] **Book Search Page** (Google Books API / Open Library API)
 - [ ] **Add Books to "Read" or "Want to Read" lists**
@@ -46,12 +46,3 @@ This is a **book tracking and recommendation web app**, similar to Goodreads or 
 - [ ] **Book Discussions & Comments**
 - [ ] **Full-Text Search Optimization (Elasticsearch)**
 - [ ] **Notifications System (Redis + WebSockets)**
-
----
-
-## **🎯 Next Steps**
-1. **Initialize frontend & backend folders.**
-2. **Start with user authentication & book search API integration.**
-3. **Plan database schema** for books, users, and reviews.
-4. **Build MVP and iterate! 🚀**
-
