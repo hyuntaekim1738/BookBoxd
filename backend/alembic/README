@@ -1,0 +1,3 @@
+Provides updates to database by examining app/db/models.py and generating script to update
+Run alembic revision --autogenerate -m "message"
+alembic upgrade head

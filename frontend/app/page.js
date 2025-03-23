@@ -25,7 +25,6 @@ export default function Home() {
         Welcome to BookBoxd
       </h2>
       <h3 className="max-w-md text-xl  mt-2 text-center text-gray-600">
-        Welcome to BookBoxd! 
         Consider this your digital bookshelf, recording books you've read and your thoughts on them.
         Click the button below to log in and get started!
       </h3>

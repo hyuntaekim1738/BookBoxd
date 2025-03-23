@@ -2,7 +2,7 @@
 
 ## **Project Overview**
 This is a **book tracking and recommendation web app**, similar to Goodreads or a Letterboxd but for books. Users can:
-- 📖 **Search for books** using Google Books API / Open Library API.
+- 📖 **Search for books** using Google Books API.
 - ✅ **Mark books as "Read" or "Want to Read"**.
 - ⭐ **Rate books and write reviews**.
 - 🧠 **Get book recommendations** based on ratings & reading history.
@@ -15,13 +15,13 @@ This is a **book tracking and recommendation web app**, similar to Goodreads or 
 | Feature | Technology |
 |------------|--------------|
 | **Frontend** | Next.js, Tailwind CSS |
-| **Backend** | FastAPI / Flask |
+| **Backend** | FastAPI  |
 | **Database** | PostgreSQL (for structured data like users & books) |
 | **Auth** | Firebase Auth |
 | **Search** | Elasticsearch (for book search & recommendations) |
 | **Caching** | Redis |
 | **Recommendation System** | Collaborative Filtering + NLP (spaCy / Hugging Face) |
-| **APIs** | Google Books API, Open Library API |
+| **APIs** | Google Books API |
 
 ---
 
@@ -30,7 +30,7 @@ This is a **book tracking and recommendation web app**, similar to Goodreads or 
 📆 *Timeline:* 2-3 months
 - ✅ **User Authentication** (Google OAuth / Firebase Auth)
 - [ ] **Database setup (PostgreSQL)**
-- [ ] **Book Search Page** (Google Books API / Open Library API)
+- ✅  **Book Search Page** (Google Books API / Open Library API)
 - [ ] **Add Books to "Read" or "Want to Read" lists**
 - [ ] **Rate books & write reviews**
 

@@ -1,0 +1,4 @@
+UserBookshelves
+- userId (FK) (PK)
+- bookshelfId (PK)
+- bookshelfName 

@@ -1,0 +1,3 @@
+BooksOnBookshelf 
+- BookshelfId (FK) (PK)
+- BookId (FK) (PK)

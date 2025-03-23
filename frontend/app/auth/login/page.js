@@ -55,10 +55,7 @@ export default function Login() {
           <span className="block sm:inline">{error}</span>
         </div>
       )}
-      <form 
-        className="mt-8 space-y-6" 
-        onSubmit={handleSubmit}
-      >
+      <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
         <div className="rounded-md shadow-sm -space-y-px">
           <div>
             <label htmlFor="email" className="sr-only">
@@ -106,7 +103,7 @@ export default function Login() {
             <div className="w-full border-t border-gray-300" />
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white text-gray-500">Or continue with</span>
+            <span className="px-2 bg-transparent text-gray-500">Or</span>
           </div>
         </div>
 
