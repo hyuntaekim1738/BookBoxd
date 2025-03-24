@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../auth/AuthContext';
+import { useRouter } from 'next/navigation';
 
 export default function SearchResultCard({ book, onBookshelfChange }) {
+  const router = useRouter();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [bookshelves, setBookshelves] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -126,8 +128,19 @@ export default function SearchResultCard({ book, onBookshelfChange }) {
     }
   };
 
+  const handleCardClick = (e) => {
+    // don't navigate if clicking on the dropdown or its children
+    if (dropdownRef.current && dropdownRef.current.contains(e.target)) {
+      return;
+    }
+    router.push(`/books/${book.id}`);
+  };
+
   return (
-    <div className="flex gap-4 p-4 bg-white rounded-lg shadow hover:shadow-md transition-shadow">
+    <div 
+      className="flex gap-4 p-4 bg-white rounded-lg shadow hover:shadow-md transition-shadow cursor-pointer"
+      onClick={handleCardClick}
+    >
       <div className="flex-shrink-0">
         {book.imageLinks?.thumbnail ? (
           <img

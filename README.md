@@ -46,3 +46,7 @@ This is a **book tracking and recommendation web app**, similar to Goodreads or 
 - [ ] **Book Discussions & Comments**
 - [ ] **Full-Text Search Optimization (Elasticsearch)**
 - [ ] **Notifications System (Redis + WebSockets)**
+
+
+## **Running and Installation Instructions**
+Run backend: uvicorn app.main:app --reload
