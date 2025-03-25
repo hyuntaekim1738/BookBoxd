@@ -91,7 +91,7 @@ def add_book_to_bookshelf(
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """add a book to a bookshelf"""
+    
     # check if bookshelf exists and belongs to user
     bookshelf = db.query(Bookshelf).filter(
         Bookshelf.id == bookshelfId,
@@ -157,8 +157,12 @@ def create_default_bookshelf(
         Bookshelf.name == "Want to read"
     ).first()
     
+    
     if existing:
-        return existing
+        return {
+            **existing.__dict__,
+            'bookIds': [assoc.bookId for assoc in existing.bookIds] if existing.bookIds else []
+        }
 
     # create new default bookshelf
     db_bookshelf = Bookshelf(

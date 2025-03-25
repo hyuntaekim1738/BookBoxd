@@ -28,21 +28,15 @@ This is a **book tracking and recommendation web app**, similar to Goodreads or 
 ## **🔨 Development Plan**
 ### **1️⃣ Phase 1: Core Features (MVP)**
 📆 *Timeline:* 2-3 months
-- ✅ **User Authentication** (Google OAuth / Firebase Auth)
-- [ ] **Database setup (PostgreSQL)**
-- ✅  **Book Search Page** (Google Books API / Open Library API)
+✅ **User Authentication** (Google OAuth / Firebase Auth)
+✅ **Database setup (PostgreSQL)**
+✅  **Book Search Page** (Google Books API / Open Library API)
 - [ ] **Add Books to "Read" or "Want to Read" lists**
-- [ ] **Rate books & write reviews**
+✅ **Rate books**
 
 ### **2️⃣ Phase 2: Recommendations & Personalization**
 📆 *Timeline:* 3-4 months
-- [ ] **Collaborative Filtering for Recommendations**
-- [ ] **NLP-based Similar Book Matching**
+- [ ] **NLP/TF-IDF suggestion system**
 - [ ] **Reading Analytics Dashboard**
 - [ ] **Friend Activity Feed**
-
-### **3️⃣ Phase 3: Community & Performance Enhancements**
-📆 *Timeline:* 3-4 months
-- [ ] **Book Discussions & Comments**
-- [ ] **Full-Text Search Optimization (Elasticsearch)**
-- [ ] **Notifications System (Redis + WebSockets)**
+- [ ] **Written Reviews**

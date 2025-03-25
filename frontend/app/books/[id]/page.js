@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/app/auth/AuthContext';
+import Link from 'next/link';
 
 export default function BookDetailsPage() {
   const params = useParams();
@@ -154,6 +155,12 @@ export default function BookDetailsPage() {
                 Log in to rate this book
               </p>
             )}
+            <Link 
+              href={`/books/${params.id}/reviews`}
+              className="inline-block mt-2 text-accent hover:text-accent-dark"
+            >
+              View all reviews
+            </Link>
           </div>
         </div>
 

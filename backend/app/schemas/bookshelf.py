@@ -15,5 +15,6 @@ class Bookshelf(BookshelfBase):
 
     class Config:
         from_attributes = True
+        orm_mode = True
 
 # this file is for the schemas for the bookshelf. It is used to validate the data that is sent to the database.
