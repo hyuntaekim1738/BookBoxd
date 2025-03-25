@@ -138,10 +138,18 @@ export default function SearchResultCard({ book, onBookshelfChange }) {
     }
   };
 
-  const handleBookshelfToggle = async (bookshelfId) => {
+  const handleBookshelfToggle = async (bookshelfId, bookshelfName) => {
     if (bookShelvesWithBook.has(bookshelfId)) {
       await removeFromBookshelf(bookshelfId);
     } else {
+      // if we are adding a book to "finished reading" shelf, we need to remove it from "want to read" shelf
+      if (bookshelfName === "Finished Reading") {
+        //find the "want to read" shelf
+        const wantToReadShelf = bookshelves.find(shelf => shelf.name === "Want to read");
+        if (wantToReadShelf) {
+          await removeFromBookshelf(wantToReadShelf.id);
+        }
+      }
       await addToBookshelf(bookshelfId);
     }
   };
@@ -205,7 +213,7 @@ export default function SearchResultCard({ book, onBookshelfChange }) {
                     {bookshelves.map((bookshelf) => (
                       <button
                         key={bookshelf.id}
-                        onClick={() => handleBookshelfToggle(bookshelf.id)}
+                        onClick={() => handleBookshelfToggle(bookshelf.id, bookshelf.name)}
                         className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
                       >
                         <input

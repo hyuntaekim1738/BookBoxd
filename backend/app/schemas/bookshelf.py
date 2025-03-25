@@ -5,7 +5,7 @@ class BookshelfBase(BaseModel):
     name: str
 
 class BookshelfCreate(BookshelfBase):
-    pass
+    name: str
 
 class Bookshelf(BookshelfBase):
     id: int

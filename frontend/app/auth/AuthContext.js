@@ -28,14 +28,15 @@ export function AuthProvider({ children }) {
     return unsubscribe;
   }, []);
 
-  const createDefaultBookshelf = async (user) => {
+  const createDefaultBookshelf = async (user, name) => {
     try {
       const response = await fetch('http://localhost:8000/api/v1/bookshelves/default', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${user.uid}`
-        }
+        },
+        body: JSON.stringify({ name: name })
       });
       
       if (!response.ok) {
@@ -52,7 +53,8 @@ export function AuthProvider({ children }) {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
-      await createDefaultBookshelf(result.user);
+      await createDefaultBookshelf(result.user, 'Want to read');
+      await createDefaultBookshelf(result.user, 'Finished Reading');
     } catch (error) {
       console.error('Error signing in with Google:', error);
     }
@@ -70,7 +72,8 @@ export function AuthProvider({ children }) {
   const signInWithEmail = async (email, password) => {
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
-      await createDefaultBookshelf(result.user);
+      await createDefaultBookshelf(result.user, 'Want to read');
+      await createDefaultBookshelf(result.user, 'Finished Reading');
     } catch (error) {
       console.error('Error signing in with email:', error);
       throw error;
@@ -80,7 +83,8 @@ export function AuthProvider({ children }) {
   const signUpWithEmail = async (email, password) => {
     try {
       const result = await createUserWithEmailAndPassword(auth, email, password);
-      await createDefaultBookshelf(result.user);
+      await createDefaultBookshelf(result.user, 'Want to read');
+      await createDefaultBookshelf(result.user, 'Finished Reading');
       router.push('/search');
     } catch (error) {
       console.error('Error signing up with email:', error);

@@ -148,13 +148,14 @@ def remove_book_from_bookshelf(
 
 @router.post("/default", response_model=BookshelfSchema)
 def create_default_bookshelf(
+    bookshelf: BookshelfCreate,
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     # check if user already has a default bookshelf
     existing = db.query(Bookshelf).filter(
         Bookshelf.userId == current_user["uid"],
-        Bookshelf.name == "Want to read"
+        Bookshelf.name == bookshelf.name
     ).first()
     
     
@@ -167,7 +168,7 @@ def create_default_bookshelf(
     # create new default bookshelf
     db_bookshelf = Bookshelf(
         userId=current_user["uid"],
-        name="Want to read"
+        name=bookshelf.name
     )
     db.add(db_bookshelf)
     db.commit()
