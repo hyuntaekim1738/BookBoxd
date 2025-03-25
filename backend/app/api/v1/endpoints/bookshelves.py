@@ -14,6 +14,7 @@ def create_bookshelf(
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
+    """create a new bookshelf"""
     db_bookshelf = Bookshelf(
         userId=current_user["uid"],
         name=bookshelf.name
@@ -28,6 +29,7 @@ def get_user_bookshelves(
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
+    """get all bookshelves for a user"""
     bookshelves = db.query(Bookshelf).filter(Bookshelf.userId == current_user["uid"]).all()
     
     # get book counts and bookIds for each bookshelf
@@ -56,7 +58,7 @@ def get_bookshelf(
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    
+    """get a specific bookshelf by ID"""
     bookshelf = db.query(Bookshelf).filter(
         Bookshelf.id == bookshelfId,
         Bookshelf.userId == current_user["uid"]
@@ -89,6 +91,7 @@ def add_book_to_bookshelf(
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
+    """add a book to a bookshelf"""
     # check if bookshelf exists and belongs to user
     bookshelf = db.query(Bookshelf).filter(
         Bookshelf.id == bookshelfId,

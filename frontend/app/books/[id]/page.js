@@ -10,6 +10,10 @@ export default function BookDetailsPage() {
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [userRating, setUserRating] = useState(null);
+  const [isRatingHovered, setIsRatingHovered] = useState(false);
+  const [hoveredRating, setHoveredRating] = useState(0);
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchBookDetails = async () => {
@@ -33,6 +37,84 @@ export default function BookDetailsPage() {
 
     fetchBookDetails();
   }, [params.id]);
+
+  useEffect(() => {
+    const fetchUserRating = async () => {
+      if (!user) return;
+      
+      try {
+        const response = await fetch(`http://localhost:8000/api/v1/ratings/${params.id}`, {
+          headers: {
+            'Authorization': `Bearer ${user.uid}`
+          }
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch user rating');
+        }
+        const data = await response.json();
+        setUserRating(data.rating);
+      } catch (err) {
+        console.error('Error fetching user rating:', err);
+      }
+    };
+
+    fetchUserRating();
+  }, [user, params.id]);
+
+  const handleRating = async (rating) => {
+    if (!user) {
+      router.push('/login');
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:8000/api/v1/ratings/${params.id}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${user.uid}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ rating })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save rating');
+      }
+
+      const data = await response.json();
+      setUserRating(data.rating);
+    } catch (err) {
+      console.error('Error saving rating:', err);
+    }
+  };
+
+  const renderStars = (filled) => {
+    return (
+      <div className="flex">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <button
+            key={star}
+            className={`text-2xl ${
+              (isRatingHovered ? star <= hoveredRating : star <= (filled || 0))
+                ? 'text-yellow-400'
+                : 'text-gray-300'
+            } hover:text-yellow-400 transition-colors`}
+            onMouseEnter={() => {
+              setIsRatingHovered(true);
+              setHoveredRating(star);
+            }}
+            onMouseLeave={() => {
+              setIsRatingHovered(false);
+              setHoveredRating(0);
+            }}
+            onClick={() => handleRating(star)}
+          >
+            ★
+          </button>
+        ))}
+      </div>
+    );
+  };
 
   if (loading) return <div className="container mx-auto px-4 py-8">Loading...</div>;
   if (error) return <div className="container mx-auto px-4 py-8">Error: {error}</div>;
@@ -63,6 +145,16 @@ export default function BookDetailsPage() {
               <span className="text-gray-400">No image</span>
             </div>
           )}
+          
+          <div className="mt-4">
+            <h3 className="text-lg text-gray-900 font-semibold mb-2">Your Rating</h3>
+            {renderStars(userRating)}
+            {!user && (
+              <p className="text-sm text-gray-500 mt-2">
+                Log in to rate this book
+              </p>
+            )}
+          </div>
         </div>
 
         <div className="flex-grow">

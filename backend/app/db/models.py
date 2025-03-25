@@ -13,8 +13,14 @@ class Bookshelf(Base):
     bookIds = relationship("BookAssociation", back_populates="bookshelf")
 
 class BookAssociation(Base):
-    __tablename__ = "book_associations"
+    __tablename__ = "bookAssociations"
 
     bookshelfId = Column(Integer, ForeignKey('bookshelves.id'), primary_key=True)
     bookId = Column(String, primary_key=True)  # google Books ID
     bookshelf = relationship("Bookshelf", back_populates="bookIds") 
+
+class UserRating(Base):
+    __tablename__ = "userRatings"
+    userId = Column(String, index=True, primary_key=True)
+    bookId = Column(String, index=True, primary_key=True)
+    rating = Column(Integer)  # rating from 1-5 

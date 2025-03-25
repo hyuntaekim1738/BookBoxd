@@ -8,6 +8,7 @@ export default function SearchResultCard({ book, onBookshelfChange }) {
   const [bookshelves, setBookshelves] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [bookShelvesWithBook, setBookShelvesWithBook] = useState(new Set());
+  const [bookRating, setBookRating] = useState(null);
   const { user } = useAuth();
   const dropdownRef = useRef(null);
 
@@ -23,6 +24,23 @@ export default function SearchResultCard({ book, onBookshelfChange }) {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    const fetchBookRating = async () => {
+      try {
+        const response = await fetch(`http://localhost:8000/api/v1/ratings/${book.id}/stats`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch book rating stats');
+        }
+        const data = await response.json();
+        setBookRating(data);
+      } catch (error) {
+        console.error('Error fetching book rating:', error);
+      }
+    };
+
+    fetchBookRating();
+  }, [book.id]);
 
   const fetchBookshelves = async () => {
     if (!user) return;
@@ -207,16 +225,16 @@ export default function SearchResultCard({ book, onBookshelfChange }) {
             )}
           </div>
           
-          {book.averageRating && (
+          {bookRating && bookRating.averageRating && (
             <div className="flex items-center">
               <span className="text-yellow-400">
-                {'★'.repeat(Math.round(book.averageRating))}
+                {'★'.repeat(Math.round(bookRating.averageRating))}
               </span>
               <span className="text-gray-400">
-                {'★'.repeat(5 - Math.round(book.averageRating))}
+                {'★'.repeat(5 - Math.round(bookRating.averageRating))}
               </span>
               <span className="ml-1 text-sm text-gray-600">
-                ({book.averageRating.toFixed(1)})
+                ({bookRating.ratingsCount} {bookRating.ratingsCount === 1 ? 'rating' : 'ratings'})
               </span>
             </div>
           )}
