@@ -3,11 +3,12 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../auth/AuthContext';
 import SearchResultCard from '../../components/SearchResultCard';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
 export default function BookshelfPage() {
   const { user } = useAuth();
   const params = useParams();
+  const router = useRouter();
   const [bookshelf, setBookshelf] = useState(null);
   const [books, setBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -28,8 +29,7 @@ export default function BookshelfPage() {
         throw new Error(data.error || 'Failed to fetch bookshelf');
       }
       setBookshelf(data);
-      
-      // fetch book details for each book ID
+
       const bookPromises = data.bookIds.map(async (bookId) => {
         const bookResponse = await fetch(`/api/books/search?q=id:${bookId}`);
         if (!bookResponse.ok) {
@@ -45,6 +45,28 @@ export default function BookshelfPage() {
       setError(err.message);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!confirm(`Are you sure you want to delete "${bookshelf.name}"?`)) return;
+
+    try {
+      const response = await fetch(`http://localhost:8000/api/v1/bookshelves/${params.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${user.uid}`,
+        }
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to delete bookshelf');
+      }
+
+      router.push('/bookshelves');
+    } catch (err) {
+      alert(err.message);
     }
   };
 
@@ -86,13 +108,23 @@ export default function BookshelfPage() {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">
-          {bookshelf.name}
-        </h1>
-        <p className="text-sm text-gray-500">
-          {books.length} books
-        </p>
+      <div className="mb-8 flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            {bookshelf.name}
+          </h1>
+          <p className="text-sm text-gray-500">
+            {books.length} books
+          </p>
+        </div>
+        {(bookshelf.name !== "Want to read" && bookshelf.name !== "Finished Reading") && (
+          <button
+            onClick={handleDelete}
+            className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+          >
+            Delete Shelf
+          </button>
+        )}
       </div>
 
       {/* books List */}
@@ -114,4 +146,4 @@ export default function BookshelfPage() {
       </div>
     </div>
   );
-} 
+}

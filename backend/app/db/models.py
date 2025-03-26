@@ -11,12 +11,12 @@ class Bookshelf(Base):
     name = Column(String, nullable=False)
 
     # relationship with books (just storing the IDs)
-    bookIds = relationship("BookAssociation", back_populates="bookshelf")
+    bookIds = relationship("BookAssociation", back_populates="bookshelf", cascade="all, delete-orphan")
 
 class BookAssociation(Base):
     __tablename__ = "bookAssociations"
 
-    bookshelfId = Column(Integer, ForeignKey('bookshelves.id'), primary_key=True)
+    bookshelfId = Column(Integer, ForeignKey('bookshelves.id', ondelete="CASCADE"), primary_key=True)
     bookId = Column(String, primary_key=True)  # google Books ID
     bookshelf = relationship("Bookshelf", back_populates="bookIds") 
 

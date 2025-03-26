@@ -174,3 +174,22 @@ def create_default_bookshelf(
     db.commit()
     db.refresh(db_bookshelf)
     return db_bookshelf 
+
+@router.delete("/{bookshelfId}")
+def delete_bookshelf(
+    bookshelfId: int,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    # check if bookshelf exists and belongs to user
+    bookshelf = db.query(Bookshelf).filter(
+        Bookshelf.id == bookshelfId,
+        Bookshelf.userId == current_user["uid"]
+    ).first()
+    if not bookshelf:
+        raise HTTPException(status_code=404, detail="Bookshelf not found")
+    
+    # delete bookshelf
+    db.delete(bookshelf)
+    db.commit()
+    return {"message": "Bookshelf deleted successfully"}
