@@ -62,7 +62,10 @@ export default function Home() {
                         {recommendations.map((book) => (
                             <SearchResultCard
                                 key={book.id}
-                                book={book.volumeInfo}
+                                book={{
+                                    id: book.id,
+                                    ...book.volumeInfo
+                                }}
                                 onBookshelfChange={() => {}}
                             />
                         ))}
