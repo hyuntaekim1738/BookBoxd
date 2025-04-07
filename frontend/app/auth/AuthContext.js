@@ -85,7 +85,7 @@ export function AuthProvider({ children }) {
       const result = await createUserWithEmailAndPassword(auth, email, password);
       await createDefaultBookshelf(result.user, 'Want to read');
       await createDefaultBookshelf(result.user, 'Finished Reading');
-      router.push('/search');
+      router.push('/home');
     } catch (error) {
       console.error('Error signing up with email:', error);
       throw error;

@@ -14,7 +14,7 @@ export default function Navbar() {
         <div className="flex justify-between h-16">
           {/* logo section */}
           <div className="flex items-center">
-            <Link href={user ? "/search" : "/"} className="flex items-center">
+            <Link href={user ? "/home" : "/"} className="flex items-center">
               <span className="text-2xl font-bold text-primary">BookBoxd</span>
             </Link>
             {user && (

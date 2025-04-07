@@ -15,7 +15,7 @@ export default function SignUp() {
 
   useEffect(() => {
     if (user) {
-      router.push('/search');
+      router.push('/home');
     }
   }, [user, router]);
 

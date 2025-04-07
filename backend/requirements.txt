@@ -8,4 +8,7 @@ pip install python-dotenv
 brew install postgresql
 brew services start postgresql
 pip install pydantic-settings
-
+pip install requests
+pip install scikit-learn
+pip install nltk
+pip install numpy
