@@ -9,7 +9,7 @@ This is a **book tracking and recommendation web app**, similar to Goodreads or 
 
 ---
 
-## **🛠 Tech Stack**
+## **Tech Stack**
 | Feature | Technology |
 |------------|--------------|
 | **Frontend** | Next.js, Tailwind CSS |
